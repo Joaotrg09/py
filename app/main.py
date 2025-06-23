@@ -1,7 +1,7 @@
 from fastapi import FastAPI, status, Depends
 from sqlalchemy.orm import Session
 
-from app import schemas
+from app import schemas, models
 
 from typing import List
 
@@ -20,9 +20,14 @@ def read_root():
 )
 def create_user(user: schemas.UserRequest, db: Session = Depends(get_db)):
 
-    db.add(user)
+    print("Creating user:", user)
+    print("Database session:", db)
+
+    user_create = models.User(name=user.name, email=user.email)
+
+    db.add(user_create)
     db.commit()
-    db.refresh(user)
+    db.refresh(user_create)
 
     return user
 
