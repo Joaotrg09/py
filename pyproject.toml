@@ -1,0 +1,20 @@
+[project]
+name = "app"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Joaotrg09",email = "joao.lima@targitbrasil.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi[standard] (>=0.115.13,<0.116.0)",
+    "uvicorn (>=0.34.3,<0.35.0)",
+    "sqlalchemy (>=2.0.41,<3.0.0)",
+    "psycopg2 (>=2.9.10,<3.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
