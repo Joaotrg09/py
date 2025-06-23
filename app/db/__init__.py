@@ -15,7 +15,6 @@ SessionLocal = scoped_session(
 )
 
 
-@contextmanager
 def get_db():
     db = SessionLocal()
     try:
