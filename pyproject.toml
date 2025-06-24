@@ -12,6 +12,8 @@ fastapi = { extras = ["standard"], version = "^0.115.13" }
 uvicorn = "^0.34.3"
 sqlalchemy = "^2.0.41"
 psycopg2 = "^2.9.10"
+jwt = "^1.4.0"
+python-jose = "^3.5.0"
 
 [tool.poetry.group.dev.dependencies]
 alembic = "^1.16.2"
