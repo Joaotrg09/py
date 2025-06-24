@@ -1,33 +1,57 @@
-from fastapi import FastAPI, status, Depends
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
 
-from app import schemas
+from app.routers import users, login
 
-from typing import List
-
-from app.db import get_db
-
-app = FastAPI()
+app = FastAPI(title="Deploy Railway")
 
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, World!"}
-
-
-@app.post(
-    "/users", response_model=schemas.UserResponse, status_code=status.HTTP_201_CREATED
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
-def create_user(user: schemas.UserRequest, db: Session = Depends(get_db)):
 
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-
-    return user
+app.include_router(login.router)
+app.include_router(users.router)
 
 
-@app.get("/users", response_model=List[schemas.UserResponse])
-def get_users(db: Session = Depends(get_db)):
-    users = db.query(User).all()
-    return users
+from fastapi.openapi.utils import get_openapi
+
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+
+    openapi_schema = get_openapi(
+        title="Minha API",
+        version="1.0.0",
+        description="API protegida com token JWT",
+        routes=app.routes,
+    )
+
+    if "components" not in openapi_schema:
+        openapi_schema["components"] = {}
+
+    openapi_schema["components"]["securitySchemes"] = {
+        "BearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT",
+        }
+    }
+
+    # Aplica o cadeado só nas rotas que começam com /users
+    for path, methods in openapi_schema["paths"].items():
+        if path.startswith("/users"):
+            for operation in methods.values():
+                operation["security"] = [{"BearerAuth": []}]
+
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+app.openapi = custom_openapi
