@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 
-from app.routers import users, login
+from app.routers import users, login, objects
 
 app = FastAPI(title="Deploy Railway")
 
@@ -17,3 +17,4 @@ app.add_middleware(
 
 app.include_router(login.router)
 app.include_router(users.router)
+app.include_router(objects.router)

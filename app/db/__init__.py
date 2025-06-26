@@ -4,8 +4,6 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 
 from app.config import DATABASE_URL
 
-from contextlib import contextmanager
-
 Base = declarative_base()
 
 engine = create_engine(DATABASE_URL, pool_recycle=10, pool_size=25, max_overflow=15)
