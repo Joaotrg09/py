@@ -15,6 +15,3 @@ class Object(BaseModel):
     Name: str | None = None
     Type: str | None = None
     Query: dict | None = None
-
-    class config:
-        orm_mode = True
